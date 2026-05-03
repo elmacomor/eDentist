@@ -1,0 +1,73 @@
+version: '3'
+services:
+  rabbitMQ:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq_container'
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 8050:15672
+      - 5672:5672
+    expose:
+      - 5672
+    networks:
+      - eDentistNet
+
+  edentist_sql:
+    container_name: app_db
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Word5678?
+      - MSSQL_PID=Developer
+    ports:
+      - 1405:1433
+    expose:
+      - 1433
+    networks:
+      - eDentistNet
+
+  edentist_api:
+    restart: unless-stopped
+    build:
+      context: ./eDentist
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=edentist_sql, 1433;Database=200020;User=sa;Password=Word5678?;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 5192:5192
+    networks:
+      - eDentistNet
+    links:
+      - edentist_sql
+    depends_on:
+      - edentist_sql
+      - rabbitMQ
+
+  edentistrabbit:
+    restart: unless-stopped
+    build:
+      context: ./eDentist_rabbitmq/eDentist_rabbitmq
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=edentist_sql, 1433;Database=200020;User=sa;Password=Word5678?;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 7291:7291
+    networks:
+      - eDentistNet
+    depends_on:
+      - rabbitMQ
+
+networks:
+  eDentistNet:
+    driver: bridge

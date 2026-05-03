@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "W7edYNHmdmtOleicLFgSMqKxKMKworA0ANIoH4tQCYo=",
+  "Source": "eDentist_rabbitmq",
+  "BasePath": "_content/eDentist_rabbitmq",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

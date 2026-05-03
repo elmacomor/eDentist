@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\eDentist_rabbitmq.props" />
+</Project>
