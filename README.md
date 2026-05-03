@@ -1,4 +1,5 @@
 # MyDentist App
+This app was made as part of a faculty subject Software development 2.
 The Dentist Appointment App helps dentists manage appointments, patient records, and communication more efficiently.
 
 ### Features:
